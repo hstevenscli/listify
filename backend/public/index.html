@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Listy</title>
+        <link rel="icon" href="photos/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="app" style="height:100%">
+
+            <div id="navbar">
+
+                <div id="navbar-left">
+                    <div id="main-page-nav">
+                        <button @click="pageFocus = 'main'">Home</button>
+                        <button @click="pageFocus = 'social'" v-if="loggedIn">Social</button>
+                        <button @click="pageFocus = 'profile'" v-if="loggedIn">Profile</button>
+
+
+                    </div>
+                </div>
+
+                <div id="navbar-right">
+                    <div id="login">
+                        <button  id="login-button" @click="showLogin = true" v-if="!loggedIn">Login</button>
+                    </div>
+                    <div id="logout">
+                        <button id="logout-button" @click="showSignOut = true" v-if="loggedIn">Sign Out</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="add-friend-modal" class="modal" v-if="showSignOut">
+                <div id="add-friend-modal-content">
+
+                    <div id="login-fields-container">
+                        <label style="font-weight: bolder; font-size: larger;">Confirm Sign Out</label>
+                        <br>
+                    </div>
+                    <div id="friend-modal-button-container">
+                        <button @click="showSignOut = false" id="login-modal-cancel-button">Cancel</button>
+                        <button @click="signOut(); showSignOut = false; pageFocus = 'main'">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="create-account-modal" class="modal" v-if="showCreateAccount" @keydown="handleKeyDownRegister">
+                <div id="create-account-modal-content">
+
+                    <div id="login-fields-container">
+                        <h2 style="font-weight: bold;">Create Account</h2>
+                        <label style="font-size: larger;">Username:</label>
+                        <input @blur="validateCAUsername" type="text" v-model="createAccountUsername">
+                        <div id="warning">{{ warnings.username }}</div>
+                        <br>
+                        <label style="font-size: larger;">Password:</label>
+                        <input @blur="validateCAPassword" type="password" v-model="createAccountPassword">
+                        <div id="warning">{{ warnings.password }}</div>
+                        <div id="warning">{{ warnings.passwordlength }}</div>
+                        <br>
+                        <label style="font-size: larger;">Confirm Password:</label>
+                        <input @blur="validateCAPasswordConfirmation" type="password" v-model="createAccountPasswordConfirmed">
+                        <div id="warning">{{ warnings.passwordConfirmation }}</div>
+                        <div id="warning">{{ warnings.passwordsmatch }}</div>
+                        <br>
+                    </div>
+
+
+                    <div id="login-modal-button-container">
+                        <button @click="showCreateAccount = false; createAccountUsername = ''; createAccountPassword = ''; createAccountPasswordConfirmed = ''" id="login-modal-cancel-button">Cancel</button>
+                        <button @click="validateCreateAccount">Create</button>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div id="login-modal" class="modal" v-if="showLogin" @keydown="handleKeyDownLogin">
+                <div id="login-modal-content">
+
+                    <div id="login-fields-container">
+                        <div id="warning">{{ warnings.login }}</div>
+                        <h2>Login Please</h2>
+                        <label style="font-size: larger">Username:</label>
+                        <input type="text" v-model="loginUsername">
+                        <br>
+                        <label style="font-size: larger">Password:</label>
+                        <input type="password" v-model="loginPassword">
+                        <p id="create-account-p"><a @click="showLogin = false; showCreateAccount = true; warnings = {}">Create Account</a></p>
+                    </div>
+
+
+                    <div id="login-modal-button-container">
+                        <button @click="showLogin = false; loginPassword = ''; loginUsername = ''"id="login-modal-cancel-button">Cancel</button>
+                        <button @click=" tryLogin();">Submit</button>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div id="login-modal" class="modal" v-if="showAddRow">
+                <div id="login-modal-content">
+
+                    <div id="login-fields-container">
+
+
+                        <label>Item Name</label>
+                        <input type="text" v-model="newRowItemName" >
+                        <div id="warning">{{ warnings.name }}</div>
+                        <br>
+                        <label>Item Link</label>
+                        <input type="text" v-model="newRowItemLink" >
+                        <div id="warning">{{ warnings.link }}</div>
+                        <br>
+                        <label>Item Price</label>
+                        <input type="number" v-model="newRowItemPrice" >
+                        <div id="warning">{{ warnings.price }}</div>
+                        <br>
+                        <label>Item Priority</label>
+                        <input type="number" min="0" max="10" v-model="newRowItemPriority" >
+                        <div id="warning">{{ warnings.priority }}</div>
+                        <br>
+
+
+                    </div>
+
+                    <div id="login-modal-button-container">
+                        <button @click="showAddRow = false; newRowItemName = ''; newRowItemLink = ''; newRowItemPrice = ''; newRowItemPriority = 0" id="login-modal-cancel-button">Cancel</button>
+                        <button @click="addRow">Submit</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="add-friend-modal" class="modal" v-if="showAddFriend">
+                <div id="add-friend-modal-content">
+
+                    <div id="friend-fields-container">
+                        <label style="font-size: large;">Friend Name</label>
+                        <input type="text" v-model="newFriendToAdd">
+                        <br>
+                        <label style="font-size: large;">Your Name</label>
+                        <div style="color: darkblue; font-size: larger; font-weight: bold;">{{ loggedInUser }}</div>
+                        <br>
+                    </div>
+
+
+                    <div id="friend-modal-button-container">
+                        <button @click="showAddFriend = false" id="login-modal-cancel-button">Cancel</button>
+                        <button @click="addFriend(); showAddFriend = false">Submit</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="add-friend-modal" class="modal" v-if="showNewList">
+                <div id="add-friend-modal-content">
+
+                    <div id="friend-fields-container">
+                        <label style="font-size: large;">Wishlist Name</label>
+                        <input type="text" v-model="newWishlistName">
+                        <br>
+                    </div>
+
+
+                    <div id="friend-modal-button-container">
+                        <button @click="showNewList = false" id="login-modal-cancel-button">Cancel</button>
+                        <button @click="createNewWishlist(); showNewList = false">Submit</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="delete-list-modal" class="modal" v-if="showDeleteList">
+                <div id="add-friend-modal-content">
+
+                    <div id="login-fields-container">
+                        <label style="font-size: large;">This will delete the entire wishlist.</label>
+                        <!-- <input type="text" v-model="newWishlistName"> -->
+                        <label style="font-size: larger;">Are You Sure?</label>
+                        <br>
+                    </div>
+
+
+
+                    <div id="friend-modal-button-container">
+                        <button @click="showDeleteList = false" id="login-modal-cancel-button">Cancel</button>
+                        <button style="margin-left: 50px;" id="delete-button" @click="deleteWishlist(); showDeleteList = false">Delete</button>
+                    </div>
+
+                </div>
+
+            </div>
+            <div id="main-content-container" style="height:100%">
+
+                <div id="sidebar" v-if="pageFocus && loggedIn">
+
+                    <div id="main-page-sidebar-display" v-show="pageFocus === 'main'">
+
+                        <div class="profile-picture" v-if="loggedIn">
+                            <img src="./photos/pexels-mohamed-abdelghaffar-771742.jpg">
+                            <br>
+                            <h4>{{ loggedInUser }}</h4>
+                        </div>
+
+                        <h2>Friends</h2>
+
+                        <div v-for="user in users">
+
+                            <div class="friend-profile-container">
+                                <div class="img-container">
+                                    <img src="./photos/pexels-mohamed-abdelghaffar-771742.jpg">
+                                    <h3 id="friend-page-links" @click="pageFocus = 'friendpage'; console.log('Friend Name:', user.username); friendClicked(user.username)">{{ user.username }}</h3>
+                                </div>
+                                <ul>
+                                    <li v-for="wishlist in getWishlistsForUser(user.username)">{{ wishlist.name }}</li>
+                                </ul>
+                                <!-- <ul> -->
+                                <!--     <li>Friend List 1</li> -->
+                                <!--     <li>Friend List 2</li> -->
+                                <!-- </ul> -->
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div id="list-page-sidebar-display" v-if="pageFocus === 'listpage'">
+
+                        <h1 style="font-style: italic;">List Page</h1>
+
+                        <button @click="showDeleteList = true">Delete Wishlist!</button>
+
+                        <div id="access-container">
+                            <h2>Access</h2>
+                        </div>
+
+
+                        <ul>
+
+                            <div class="friend-profile-container">
+                                <div class="img-container">
+                                    <img src="./photos/pexels-mohamed-abdelghaffar-771742.jpg">
+                                    <h3>Friend Profile 2</h3>
+                                </div>
+                            </div>
+
+                            <div class="friend-profile-container">
+                                <div class="img-container">
+                                    <img src="./photos/pexels-mohamed-abdelghaffar-771742.jpg">
+                                    <h3>Friend Profile 2</h3>
+                                </div>
+                            </div>
+
+                            <div class="friend-profile-container">
+                                <div class="img-container">
+                                    <img src="./photos/pexels-mohamed-abdelghaffar-771742.jpg">
+                                    <h3>Friend Profile 2</h3>
+                                </div>
+                            </div>
+
+                            <button id="access-add-person-button">Add Person</button>
+
+                        </ul>
+
+                    </div>
+
+                    <div id="social-page-sidebar-display" v-if="pageFocus === 'social'">
+
+                        <!-- <div class="profile-picture"> -->
+                        <!--     <img src="./photos/pexels-mohamed-abdelghaffar-771742.jpg"> -->
+                        <!-- </div> -->
+                        <h2>Groups</h2>
+                        <ul id="group-display-list">
+                        </ul>
+                        <button>Coming Soon!</button>
+
+                    </div>
+
+                    <div id="friend-list-page-sidebar-display" v-if="pageFocus === 'friendpage'">
+                        <h1 style="font-style: italic;">Friend 1 Page</h1>
+                        <div class="profile-picture">
+                            <img src="./photos/pexels-mohamed-abdelghaffar-771742.jpg">
+                        </div>
+                        <h3>{{ selectedFriendName }}</h3>
+                        <h4>Bio information</h4>
+
+                    </div>
+
+                    <div id="profile-page-sidebar-display" v-if="pageFocus === 'profile'">
+                        <p>Something here</p>
+                        <button>click</button>
+
+                    </div>
+                </div>
+
+                <div id="inactive-sidebar" v-else>
+                </div>
+
+
+
+                <div id="mainbar">
+
+                    <div id="main-page-mainbar-display" v-show="pageFocus === 'main'">
+
+                        <div class="list-display-preview" v-if="loggedIn">
+
+                            <div v-for="wishlist in usersWishlists" :key="wishlist.id">
+
+                                <table>
+                                    <caption>{{wishlist.creator}}'s {{ wishlist.name }} Wishlist</caption>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Priority</th>
+                                    </tr>
+
+                                    <tr v-for="row in wishlist.content" :key="row.id">
+                                        <td><a :href="row.link" target="_blank" rel="noreferrer noopener">{{ row.item }}</a></td>
+                                        <td>${{ row.price }}</td>
+                                        <td>{{ row.priority }}</td>
+                                    </tr>
+
+                                </table>
+                                <div>
+                                    <button @click="logWishlistId(wishlist._id)">Edit</button>
+                                    <button>Share</button>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                            <button @click="showNewList = true" v-if="loggedIn">New List</button>
+
+                    </div>
+
+                    <div id="list-page-mainbar-display" v-if="pageFocus === 'listpage'">
+                        <h1 style="font-style: italic;">List Page</h1>
+
+                        <div class="list-display-preview">
+                            <h1>{{ wishlistToDisplay.creator }}'s {{ wishlistToDisplay.name }} Wishlist</h1>
+                            <table>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Priority</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr v-for="(row, index) in wishlistToDisplay.content" :key="index">
+                                    <td><a :href="row.link" target="_blank" rel="noreferrer noopener">{{ row.item }}</a></td>
+                                    <td>$<span contenteditable="true" @blur="updatePrice(index, $event)">{{ row.price }}</span></td>
+                                    <td contenteditable="true" @blur="updatePriority(index, $event)">{{ row.priority }}</td>
+                                    <td><button id="delete-button" @click="deleteRow(index, $event)">Delete</button></td>
+                                    <!-- <td><input type="number" v-model.number="row.priority"></td> -->
+                                </tr>
+                            </table>
+                            <div id="warning">
+                                {{ warnings.name }}
+                                {{ warnings.link }}
+                                {{ warnings.price }}
+                                {{ warnings.priority }}
+
+                            </div>
+                            <button @click="showAddRow = true" id="add-row-button">Add Row</button>
+                        </div>
+                        <!-- <button @click="updateWishlist()" id="update-list-button">Save</button> -->
+
+                    </div>
+
+
+                    <div id="social-page-mainbar-display" v-if="pageFocus === 'social'">
+
+                        <h1 style="font-style: italic;">Social Page</h1>
+
+                        <div id="social-page-header-container">
+                            <h1>Friends</h1>
+                            <button @click="showAddFriend = true">Add Friend</button>
+                        </div>
+
+                        <div id="friend-display-list" >
+                            <ul v-for="friend in friends">
+                                <li>{{ friend.username }}</li>
+                                <br>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div id="friend-list-page-mainbar-display" v-if="pageFocus === 'friendpage'">
+
+                        <h1 style="font-style: italic;">{{ selectedFriendName }}'s Wishlists</h1>
+
+                        <div class="list-display-preview" v-for="wishlist in getWishlistsForUser(selectedFriendName)">
+                            <h3>{{ wishlist.name }}</h3>
+                            <table>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Priority</th>
+                                </tr>
+                                <tr v-for="row in wishlist.content">
+                                    <td><a :href="row.link" target="_blank" rel="noreferrer noopener">{{ row.item }}</a></td>
+                                    <td>${{ row.price }}</td>
+                                    <td>{{ row.priority }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!-- <button @click="getWishlistsByUsername(selectedFriendName)">Click</button> -->
+
+                    </div>
+
+                    <div id="profile-page-mainbar-display" v-if="pageFocus === 'profile'">
+                        <h1>Your Profile</h1>
+
+                        <img id="profile-profile"src="./photos/pexels-mohamed-abdelghaffar-771742.jpg">
+                        <div id="bio">
+                            <h3>{{ loggedInUser }}</h3>
+                            <p>This is my profile page</p>
+                            <br>
+                            <p>Inspirational quote</p>
+                        </div>
+                        <button>Edit Profile</button>
+
+                    </div>
+
+                    <div id="not-logged-in-mainbar-display" v-if="loggedInUser === 'Not logged in'">
+                        <h3 id="greeter" :style="{color: textColor}" style="font-size: xx-large; text-align: center;">{{ greeter }}</h3>
+                        <h3 id="greeter" style="font-size: xx-large; text-align: center;">{{ greetersub }}</h3>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="vueapp.js"></script>
+
+        <!-- <script> -->
+        <!--     console.log("hello") -->
+        <!--     let loginModal = document.querySelector(".modal"); -->
+        <!--     let cancelButton = document.querySelector("#login-modal-cancel-button"); -->
+        <!--     cancelButton.onclick = function() { -->
+        <!--         console.log("Cancelbutton clicked"); -->
+        <!--         loginModal.style.display = "none"; -->
+        <!--     } -->
+
+        <!-- </script> -->
+    </body>
+</html>
+

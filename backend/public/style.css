@@ -1,0 +1,350 @@
+body {
+    margin: 0px;
+}
+
+.img-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Style for navbar */
+
+
+#navbar {
+    background-color: darkblue;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 7px solid black;
+
+}
+
+ul {
+    list-style-type: none;
+
+}
+
+#navbar-left {
+    display: flex;
+    justify-content: start;
+}
+
+#navbar-right {
+    display: flex;
+    justify-content: end;
+
+}
+
+#login-button, #logout-button {
+    background-color: #fff;
+    color: #333;
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+#login-button:hover {
+    background-color: grey;
+}
+
+#logout-button:hover {
+    background-color: grey;
+}
+
+button {
+    background-color: lightblue; /* Light blue background color */
+    color: #333;
+    /* border: none; */
+    padding: 4px 8px;
+    margin-left: 6px;
+    cursor: pointer;
+    border-radius: 4px; /* Rounded corners */
+    /* text-transform: uppercase; /1* Convert text to uppercase *1/ */
+    font-weight: bold; /* Make text bold */
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0081eb;
+}
+
+#delete-button {
+    background-color: grey; /* Red background color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    padding: 5px 10px; /* Padding */
+    cursor: pointer; /* Cursor style */
+    border-radius: 5px; /* Rounded corners */
+    margin-left: 0px;
+    /* background-color: red; /1* Light blue background color *1/ */
+    /* color: white; */
+    /* /1* border: none; *1/ */
+    /* padding: 4px 8px; */
+    /* margin-left: 6px; */
+    /* cursor: pointer; */
+    /* border-radius: 4px; /1* Rounded corners *1/ */
+    /* /1* text-transform: uppercase; /2* Convert text to uppercase *2/ *1/ */
+    /* font-weight: bold; /1* Make text bold *1/ */
+    /* transition: background-color 0.3s ease; */
+}
+
+#delete-button:hover {
+    background-color: #f44336; /* Red background color */
+}
+
+li {
+    cursor: pointer;
+}
+
+/* Style for main content container */
+#main-content-container {
+    display: flex;
+}
+
+/* Style for sidebar */
+#sidebar {
+    width: 20%;
+    background-color: #d3d3d3;
+    padding: 20px;
+    border-right: 4px solid darkgrey;
+    /* height: 100vh; */
+    /* margin-bottom: 50px; */
+}
+
+.profile-picture {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid black;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 0px;
+}
+
+.profile-picture h4 {
+    text-align: center;
+}
+
+h4 {
+    margin: 0px;
+}
+
+.friend-profile-container {
+    margin-bottom: 20px;
+}
+.img-container img {
+    width: 10%;
+    height: 10%;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+
+.friend-profile-container h2 {
+    margin-top: 20px;
+}
+
+/* Style for lists display */
+#mainbar {
+    width: 75%;
+    padding: 20px;
+}
+
+.list-display-preview {
+    margin-bottom: 20px;
+}
+
+#add-row-button {
+    width: fit-content;
+    margin-left: 45%;
+    margin-right: 45%;
+    margin-top: 5px;
+}
+
+#social-page-header-container {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: end; */
+    align-items: center;
+    border-bottom: 3px solid black;
+}
+
+#friend-display-list {
+    font-weight: bold;
+    font-size: large;
+}
+
+#friend-display-list li {
+    border-bottom: 1px solid black;
+    width: fit-content;
+}
+
+#social-page-header-container button {
+    margin-left: 10%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-right: 10%;
+}
+
+th, td {
+    border: 1px solid #d3d3d3;
+    padding: 8px;
+}
+
+td:last-child {
+    width: 1%;
+}
+
+th {
+    background-color: #d3d3d3;
+    text-align: left;
+}
+
+input {
+    width: 200px; /* Set width */
+    padding: 10px; /* Set padding */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Add border radius */
+    box-sizing: border-box; /* Ensure */
+}
+
+caption {
+    font-size: 1.2rem; /* Set font size */
+    font-weight: bold; /* Set font weight */
+    text-align: center; /* Center align text */
+    padding: 10px 0; /* Add padding */
+    color: #04638c; /* Set text color */
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    #main-content-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    #sidebar, #lists-display {
+        width: 100%;
+        height: auto;
+    }
+}
+
+#login-fields-container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+
+#login-modal-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
+#friend-fields-container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: left;
+}
+
+#friend-modal-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+/* Modals */
+.modal {
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    /* overflow: auto; /1* Enable scroll if needed *1/ */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* #login-modal { */
+/*     display: none; */
+/* } */
+/* #add-friend-modal { */
+/*     display: none; */
+/* } */
+/* #create-account-modal { */
+/*     display: none; */
+/* } */
+
+#create-account-modal-content {
+    font-weight: bold;
+    background-color: white;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 60px 100px 60px 100px;
+    border: 7px solid #888;
+    border-radius: 3px;
+    width: fit-content; /* Could be more or less, depending on screen size */
+}
+/* Modal Content/Box */
+#login-modal-content {
+    font-weight: bold;
+    background-color: white;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 60px 100px 60px 100px;
+    border: 7px solid #888;
+    border-radius: 3px;
+    width: fit-content; /* Could be more or less, depending on screen size */
+}
+
+#add-friend-modal-content {
+    font-weight: bold;
+    background-color: white;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 60px 100px 60px 100px;
+    border: 7px solid #888;
+    width: fit-content; /* Could be more or less, depending on screen size */
+}
+
+#create-account-p {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+span {
+    padding-right: 70px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#warning {
+    margin-top: 5px;
+    color: red;
+}
+
+#friend-page-links {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#inactive-sidebar {
+    background-color: white;
+    padding: 50px;
+}
+
+#profile-profile {
+    width: 50%;
+    height: 50%;
+}
