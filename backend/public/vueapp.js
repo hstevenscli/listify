@@ -34,6 +34,7 @@ Vue.createApp({
             selectedFriendName: "",
             selectedFriendWishlists: [],
             loggedInUser: "Not logged in",
+            loggedInUserObject: {},
             textColor: "black",
         };
     },
@@ -75,17 +76,16 @@ Vue.createApp({
                         console.log("Session DATA:", session_data)
                         this.loggedIn = true;
                         this.loggedInUser = session_data.session.username;
-                        return this.loadUserWishlists();
+                        this.loadUserWishlists();
+                        this.loadFriends();
                     });
                 }
             })
         },
-        getUser: function (username) {
-            fetch("/users/" + username).then((response) => {
+        getUser: async function (username) {
+            return fetch("/users/" + username).then((response) => {
                 if (response.status == 200) {
-                    response.json().then((user_from_db) => {
-
-                    })
+                    return response.json();
                 }
             })
         },
@@ -101,6 +101,10 @@ Vue.createApp({
             })
 
         },
+        loadFriends: async function () {
+            let user = await this.getUser(this.loggedInUser);
+            this.friends = user.friends
+        },
         tryLogin: function () {
             var data = "username=" + encodeURIComponent(this.loginUsername);
             data += "&password=" + encodeURIComponent(this.loginPassword);
@@ -112,11 +116,11 @@ Vue.createApp({
                 }
             }).then((response) => {
                 if (response.status == 201) {
-                    this.getUser(this.loginUsername);
                     this.loggedInUser = this.loginUsername;
                     this.loggedIn = true;
                     this.loadWishlists();
                     this.loadUserWishlists();
+                    this.loadFriends();
                     console.log("Logged in");
                     this.greeter = "Please Log In";
                     this.greetersub = "";
@@ -313,25 +317,18 @@ Vue.createApp({
             console.log("To Display:", this.wishlistToDisplay);
             console.log(this.wishlistToDisplay._id);
         },
-        addFriend: function () {
-            fetch("/users/" + this.newFriendToAdd).then((response) => {
-                if (response.status == 200) {
-                    response.json().then((friend_from_server) => {
-                        let exists = false;
-                        for (friend of this.friends) {
-                            if (friend._id === friend_from_server._id && friend.username === friend_from_server.username) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            this.friends.push(friend_from_server);
-                        }
-                    });
-                }
-            });
-            this.newFriendToAdd = "";
-
+        addFriend: async function () {
+            await fetch("/users/" + this.loggedInUser, {
+                method: "PUT",
+                body: JSON.stringify({"friend": this.newFriendToAdd}),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                redirect: "follow"
+            })
+            let user = await this.getUser(this.loggedInUser);
+            this.friends = user.friends;
+            console.log("Friinds", this.friends);
         },
         friendClicked: function (username) {
             this.selectedFriendName = username;
@@ -392,11 +389,11 @@ Vue.createApp({
         },
     },
 
-    created: function () {
+    created: async function () {
         console.log("Hello from Vue");
-        this.getSession();
-        this.loadWishlists();
-        this.loadUsers();
+        await this.getSession();
+        await this.loadWishlists();
+        await this.loadUsers();
     }
 
 }).mount("#app")

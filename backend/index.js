@@ -208,7 +208,7 @@ app.put("/wishlists/:wishlistId", authorizeRequest, function (request, response)
 //DISABLE THIS BEFORE DEPLOYMENT
 //ONLY RETURN THE USERS NOT THE PASSWORDS TOO
 app.get("/users", function (request, response) {
-    model.User.find({}, '_id username').then((users) => {
+    model.User.find({}, '_id username friends').then((users) => {
         response.set("Access-Control-Allow-Origin", "*")
         response.json(users)
     })
@@ -216,8 +216,7 @@ app.get("/users", function (request, response) {
 
 app.get("/users/:username", function (request, response) {
 
-    model.User.findOne({ username: request.params.username }, '_id username').then((user) => {
-
+    model.User.findOne({ username: request.params.username }, '_id username friends').then((user) => {
         if (user) {
             response.set("Access-Control-Allow-Origin", "*")
             response.json(user)
@@ -396,7 +395,7 @@ app.post("/users", function (request, response) {
         } else {
             const newUser = new model.User({
                 username: request.body.username,
-                password: request.body.password
+                password: request.body.password,
             })
 
             newUser.EncryptPassword(request.body.password).then(function () {
@@ -414,6 +413,33 @@ app.post("/users", function (request, response) {
         }
     })
 })
+
+app.put("/users/:username", async function (request, response) {
+    let user = await model.User.findOne({ username: request.params.username });
+    let friendToAdd = await model.User.findOne({ username: request.body.friend });
+    if (user && friendToAdd) {
+        if (user.friends.includes(friendToAdd.username)) {
+            response.set("Access-Control-Allow-Origin", "*")
+            response.status(401).send("Friend already added")
+            return
+        }
+
+        user.friends.push(friendToAdd.username)
+        model.User.updateOne({ username: request.params.username}, user).then(() => {
+            response.set("Access-Control-Allow-Origin", "*")
+            response.status(200).json("Updated")
+            console.log("Friend:", friendToAdd, "Added to", user, "friends list")
+        }).catch((error) => {
+            console.error("Failed to add friend")
+            response.set("Access-Control-Allow-Origin", "*")
+            response.sendStatus(500)
+        })
+    } else {
+        response.set("Access-Control-Allow-Origin", "*")
+        response.status(404).send("Username or friend name not found")
+    }
+})
+
 
 app.listen(8080, function () {
     console.log("Server Running...")

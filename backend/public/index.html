@@ -15,9 +15,9 @@
 
                 <div id="navbar-left">
                     <div id="main-page-nav">
-                        <button @click="pageFocus = 'main'">Home</button>
-                        <button @click="pageFocus = 'social'" v-if="loggedIn">Social</button>
-                        <button @click="pageFocus = 'profile'" v-if="loggedIn">Profile</button>
+                        <button id="login-button" @click="pageFocus = 'main'">Home</button>
+                        <button id="login-button" @click="pageFocus = 'social'" v-if="loggedIn">Social</button>
+                        <button id="login-button" @click="pageFocus = 'profile'" v-if="loggedIn">Profile</button>
 
 
                     </div>
@@ -390,7 +390,7 @@
 
                         <div id="friend-display-list" >
                             <ul v-for="friend in friends">
-                                <li>{{ friend.username }}</li>
+                                <li>{{ friend }}</li>
                                 <br>
                             </ul>
                         </div>
