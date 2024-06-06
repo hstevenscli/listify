@@ -23,7 +23,7 @@ Vue.createApp({
             newFriendToAdd: "",
             newWishlistName: "",
             testMessage: "Testing the data return function from vueapp.js",
-            greeter: "Please Log In or Register to Continue",
+            greeter: "Please log in or register to get started today",
             greetersub: "",
             wishlists: [],
             usersWishlists: [],

@@ -15,7 +15,7 @@
 
                 <div id="navbar-left">
                     <div id="main-page-nav">
-                        <button id="login-button" @click="pageFocus = 'main'">Home</button>
+                        <button id="login-button" @click="pageFocus = 'main'" v-if="loggedIn">Home</button>
                         <button id="login-button" @click="pageFocus = 'social'" v-if="loggedIn">Social</button>
                         <button id="login-button" @click="pageFocus = 'profile'" v-if="loggedIn">Profile</button>
 
@@ -434,6 +434,21 @@
                     </div>
 
                     <div id="not-logged-in-mainbar-display" v-if="loggedInUser === 'Not logged in'">
+
+                        <p>Welcome to Listify, the place to connect friends and family on special occasions.</p>
+                        <p>Something you want that isn't on Amazon? Listify lets you put links in your lists that let loved ones easily find the things you want!</p>
+                        <p>With Listify you can make and view wishlists for gifts found on any website!</p>
+                        <p>Just copy the URL for the item you want and put it right in your wishlist</p>
+                        <p>Now you can have a simple easy to navigate list to compile items from various websites such as:</p>
+                        <ul>
+                            <li>Amazon</li>
+                            <li>Etsy</li>
+                            <li>Walmart</li>
+                            <li>Ebay</li>
+                            <li>And many more</li>
+                        </ul>
+
+
                         <h3 id="greeter" :style="{color: textColor}" style="font-size: xx-large; text-align: center;">{{ greeter }}</h3>
                         <h3 id="greeter" style="font-size: xx-large; text-align: center;">{{ greetersub }}</h3>
                     </div>
