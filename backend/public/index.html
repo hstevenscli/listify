@@ -332,7 +332,7 @@
                                 </table>
                                 <div>
                                     <button @click="logWishlistId(wishlist._id)">Edit</button>
-                                    <button>Share</button>
+                                    <button @click="makeShareLink(wishlist._id)">Share</button>
                                 </div>
 
                             </div>
@@ -435,12 +435,12 @@
 
                     <div id="not-logged-in-mainbar-display" v-if="loggedInUser === 'Not logged in'">
 
-                        <p>Welcome to Listify, the place to connect friends and family on special occasions.</p>
-                        <p>Something you want that isn't on Amazon? Listify lets you put links in your lists that let loved ones easily find the things you want!</p>
-                        <p>With Listify you can make and view wishlists for gifts found on any website!</p>
-                        <p>Just copy the URL for the item you want and put it right in your wishlist</p>
-                        <p>Now you can have a simple easy to navigate list to compile items from various websites such as:</p>
-                        <ul>
+                        <h1 style="color: black;">Welcome to Listify!</h1>
+                        <p style="font-size: 20px;">Something you want that isn't on Amazon? Listify lets you put links in your lists that let loved ones easily find the things you want!
+                        With Listify you can make and view wishlists for gifts found on any website!
+                        Just copy the URL for the item you want and put it right in your wishlist
+                        Now you can have a simple easy to navigate list to compile items from various websites such as:</p>
+                        <ul style="font-size: 20px; font-weight: bold;">
                             <li>Amazon</li>
                             <li>Etsy</li>
                             <li>Walmart</li>

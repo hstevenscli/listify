@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Listy Single Wishlist View</title>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <div id="wishlist-app">
+            <h1 style="margin-left:50px">Single Wishlist View</h1>
+            <h3 style="margin-left:50px">Please <a href="/">Login</a> to Listy for more functionality</h3>
+            <table style="width:80%;margin:50px">
+                <caption>{{ wishlist.creator }}'s {{ wishlist.name }} Wishlist</caption>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Priority</th>
+                </tr>
+
+                <tr v-for="row in wishlist.content" :key="row.id">
+                    <td><a :href="row.link" target="_blank" rel="noreferrer noopener">{{ row.item }}</a></td>
+                    <td>${{ row.price }}</td>
+                    <td>{{ row.priority }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script>
+            const pathParts = window.location.pathname.split('/');
+            const wishlistId = pathParts[pathParts.length - 1];
+
+            Vue.createApp({
+                data: function () {
+                    return {
+                        wishlist: {}
+                    }
+                },
+                created() {
+                    fetch(`/wishlists/${wishlistId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.wishlist = data;
+                            console.log(this.wishlist)
+                        })
+                        .catch(error => console.error('Error fetching wishlist:', error));
+                }
+            }).mount("#wishlist-app");
+        </script>
+    </body>
+</html>

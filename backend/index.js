@@ -1,4 +1,4 @@
-const express = require('express')
+onst express = require('express')
 const bodyParser = require('body-parser')
 const model = require('./model')
 const bcrypt = require('bcrypt')
@@ -81,6 +81,10 @@ app.get("/wishlists", authorizeRequest, function (request, response) {
 
         })
     }
+})
+
+app.get("/wishlists/api/:wishlistId", function (request, response) {
+    response.sendFile("/home/ace/side_projects/listy_web_application/backend/public/api_response.html")
 })
 
 // Get a wishlist by id

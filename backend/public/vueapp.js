@@ -317,6 +317,15 @@ Vue.createApp({
             console.log("To Display:", this.wishlistToDisplay);
             console.log(this.wishlistToDisplay._id);
         },
+        makeShareLink: function (wishlistid) {
+            // console.log(wishlistid);
+            const fullUrl = window.location.href;
+            console.log(fullUrl);
+            let copyText = fullUrl + "wishlists/api/" + wishlistid
+            // navigator.clipboard.writeText(copyText.value);
+            console.log(copyText)
+            alert("Copy this URL to share this list:\n" + copyText)
+        },
         addFriend: async function () {
             await fetch("/users/" + this.loggedInUser, {
                 method: "PUT",
@@ -328,7 +337,7 @@ Vue.createApp({
             })
             let user = await this.getUser(this.loggedInUser);
             this.friends = user.friends;
-            console.log("Friinds", this.friends);
+            console.log("Friends", this.friends);
         },
         friendClicked: function (username) {
             this.selectedFriendName = username;
