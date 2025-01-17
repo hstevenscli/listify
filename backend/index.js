@@ -6,6 +6,7 @@ const cors = require('cors')
 const session = require('express-session')
 
 const app = express()
+const port = process.env.PORT || 3000;
 
 app.use(session({
     secret: "secret",
@@ -445,6 +446,6 @@ app.put("/users/:username", async function (request, response) {
 })
 
 
-app.listen(8080, function () {
+app.listen(port, function () {
     console.log("Server Running...")
 })
