@@ -85,7 +85,7 @@ app.get("/wishlists", authorizeRequest, function (request, response) {
 })
 
 app.get("/wishlists/api/:wishlistId", function (request, response) {
-    response.sendFile("/home/ace/side_projects/listy_web_application/backend/public/api_response.html")
+    response.sendFile("/backend/public/api_response.html")
 })
 
 // Get a wishlist by id
