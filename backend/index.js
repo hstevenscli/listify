@@ -7,6 +7,7 @@ const session = require('express-session')
 
 const app = express()
 const port = process.env.PORT || 3000;
+const path = require("path")
 
 app.use(session({
     secret: "secret",
@@ -85,7 +86,8 @@ app.get("/wishlists", authorizeRequest, function (request, response) {
 })
 
 app.get("/wishlists/api/:wishlistId", function (request, response) {
-    response.sendFile("/backend/public/api_response.html")
+    const filePath = path.join(__dirname, "public", "api_response.html");
+    response.sendFile(filePath);
 })
 
 // Get a wishlist by id
